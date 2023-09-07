@@ -1,0 +1,15 @@
+{
+  "name": "המרת טקסט עברית-אנגלית",
+  "version": "0.0.1",
+  "description": "Keyboard letters conversion from Hebrew to English and inverse",
+  "manifest_version": 3,
+  "author": "Avraham Weinstein",
+  "action":{
+    "default_popup": "index.html",
+    "default_title": "המרת טקסט עברית-אנגלית"
+  },
+  "permissions": [
+    "activeTab",
+    "tabs"
+  ]
+}
