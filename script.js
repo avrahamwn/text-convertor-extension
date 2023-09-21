@@ -75,6 +75,26 @@ const toEnglishBtn = document.getElementById('toEnglish');
 const toHebrewBtn = document.getElementById('toHebrew');
 const input = document.getElementById('input');
 const output = document.getElementById('output');
+const copyBtn = document.getElementById('copy-btn');
+input.focus();
+
+
+window.addEventListener("load", async (event) => {
+    const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+    let result;
+    try {
+        [{result}] = await chrome.scripting.executeScript({
+            target: {tabId: tab.id},
+            func: () => getSelection().toString(),
+        });
+        textToConvert = result || '';
+        input.value = result || '';
+        output.innerHTML = convertToEnglish(result || '');
+    } catch (e) {
+        return; // ignoring an unsupported page like chrome://extensions
+    }
+
+});
 
 toEnglishBtn.addEventListener('click', e => {
     toEnglishBtn.classList.toggle('selected');
@@ -95,9 +115,17 @@ toHebrewBtn.addEventListener('click', e => {
 
 input.addEventListener('input', e => {
     textToConvert = e.target.value || '';
+    copyBtn.innerHTML = "העתק";
+    copyBtn.style.color = "unset";
     if (toHebrew) {
         output.innerHTML = convertToHebrew(textToConvert);
     } else {
         output.innerHTML = convertToEnglish(textToConvert);
     }
+})
+
+copyBtn.addEventListener("click", () => {
+    navigator.clipboard.writeText(output.innerHTML);
+    copyBtn.innerHTML = "הועתק!"
+    copyBtn.style.color = "green";
 })
