@@ -8,9 +8,5 @@
     "default_popup": "index.html",
     "default_title": "המרת טקסט עברית-אנגלית"
   },
-  "permissions": ["scripting", "activeTab"],
-  "host_permissions": [
-    "http://*/*",
-    "https://*/*"
-  ]
+  "permissions": ["scripting", "activeTab"]
 }
