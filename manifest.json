@@ -8,5 +8,6 @@
     "default_popup": "index.html",
     "default_title": "המרת טקסט עברית-אנגלית"
   },
+  "icons": {"16": "text-convertor-icon.png"},
   "permissions": ["scripting", "activeTab"]
 }
