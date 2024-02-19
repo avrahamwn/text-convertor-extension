@@ -1,4 +1,4 @@
-<html>
+<html lang="he">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -20,11 +20,13 @@
     .selected {
         font-weight: bold;
     }
-    #input{
+
+    #input {
         resize: none;
         width: 100%;
     }
-    #output{
+
+    #output {
         padding: 5px;
         border: solid 1px black;
         word-break: break-all;
@@ -32,7 +34,8 @@
         font-size: 16px;
         font-weight: bold;
     }
-    #copy-btn{
+
+    #copy-btn {
         margin-top: 10px;
         margin-bottom: 10px;
     }
@@ -49,8 +52,9 @@
     </button>
 </div>
 <br>
-<span>קלט:</span>
-<textarea id="input" rows="4"></textarea>
+<label for="input">קלט:</label>
+<textarea id="input"
+          rows="4"></textarea>
 <span style="margin-top: 25px">פלט:</span>
 <div id="output"></div>
 <button id="copy-btn">העתק</button>

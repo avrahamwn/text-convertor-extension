@@ -65,6 +65,8 @@ function convertToHebrew(str) {
     str = str.replace(new RegExp("m", "g"), "צ");
     str = str.replace(new RegExp(",", "g"), "ת");
     str = str.replace(new RegExp("\\.", "g"), "ץ");
+    str = str.replace(new RegExp("/", "g"), ".");
+    str = str.replace(new RegExp("'", "g"), ",");
     return str;
 }
 
