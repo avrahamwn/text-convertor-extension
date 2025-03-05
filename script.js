@@ -35,7 +35,7 @@ function convertToEnglish(str) {
 
 function convertToHebrew(str) {
     str = str.replace(new RegExp("q", "g"), "/");
-    str = str.replace(new RegExp("w", "g"), "'");
+    str = str.replace(new RegExp("w", "g"), "׳");
     str = str.replace(new RegExp("e", "g"), "ק");
     str = str.replace(new RegExp("r", "g"), "ר");
     str = str.replace(new RegExp("t", "g"), "א");
@@ -71,7 +71,7 @@ function convertToHebrew(str) {
 }
 
 
-let toHebrew = false
+let toHebrew = false;
 let textToConvert = '';
 const toEnglishBtn = document.getElementById('toEnglish');
 const toHebrewBtn = document.getElementById('toHebrew');
@@ -80,13 +80,12 @@ const output = document.getElementById('output');
 const copyBtn = document.getElementById('copy-btn');
 input.focus();
 
-
-window.addEventListener("load", async (event) => {
-    const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+window.addEventListener("load", async () => {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     let result;
     try {
-        [{result}] = await chrome.scripting.executeScript({
-            target: {tabId: tab.id},
+        [{ result }] = await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
             func: () => getSelection().toString(),
         });
         textToConvert = result || '';
@@ -95,39 +94,41 @@ window.addEventListener("load", async (event) => {
     } catch (e) {
         return; // ignoring an unsupported page like chrome://extensions
     }
-
 });
 
-toEnglishBtn.addEventListener('click', e => {
+toEnglishBtn.addEventListener('click', () => {
     toEnglishBtn.classList.toggle('selected');
     toHebrewBtn.classList.toggle('selected');
     input.setAttribute('dir', 'rtl');
     output.setAttribute('dir', 'ltr');
     toHebrew = false;
     output.innerHTML = convertToEnglish(textToConvert);
+    copyBtn.textContent = "העתק";
 });
-toHebrewBtn.addEventListener('click', e => {
+toHebrewBtn.addEventListener('click', () => {
     toEnglishBtn.classList.toggle('selected');
     toHebrewBtn.classList.toggle('selected');
     input.setAttribute('dir', 'ltr');
     output.setAttribute('dir', 'rtl');
     toHebrew = true;
     output.innerHTML = convertToHebrew(textToConvert);
-})
+    copyBtn.textContent = "העתק";
+});
 
 input.addEventListener('input', e => {
     textToConvert = e.target.value || '';
-    copyBtn.innerHTML = "העתק";
-    copyBtn.style.color = "unset";
-    if (toHebrew) {
-        output.innerHTML = convertToHebrew(textToConvert);
-    } else {
-        output.innerHTML = convertToEnglish(textToConvert);
-    }
-})
+    copyBtn.textContent = "העתק";
+    copyBtn.disabled = false;
+    copyBtn.style.backgroundColor = 'green';
+    output.innerHTML = toHebrew ? convertToHebrew(textToConvert) : convertToEnglish(textToConvert);
+
+});
 
 copyBtn.addEventListener("click", () => {
     navigator.clipboard.writeText(output.innerHTML);
-    copyBtn.innerHTML = "הועתק!"
-    copyBtn.style.color = "green";
-})
+    copyBtn.textContent = "הועתק!";
+    copyBtn.style.backgroundColor = 'darkgreen';
+    copyBtn.style.color = "white";
+    copyBtn.style.fontWeight = "bold";
+    copyBtn.style.transition = "color 0.3s, font-weight 0.3s";
+});
