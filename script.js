@@ -1,6 +1,6 @@
 function convertToEnglish(str) {
     str = str.replace(new RegExp("/", "g"), "q");
-    str = str.replace(new RegExp("'", "g"), "w");
+    str = str.replace(new RegExp("׳", "g"), "w");
     str = str.replace(new RegExp("ק", "g"), "e");
     str = str.replace(new RegExp("ר", "g"), "r");
     str = str.replace(new RegExp("א", "g"), "t");
@@ -78,21 +78,29 @@ const toHebrewBtn = document.getElementById('toHebrew');
 const input = document.getElementById('input');
 const output = document.getElementById('output');
 const copyBtn = document.getElementById('copy-btn');
+const replaceBtn = document.getElementById("replace-btn");
 input.focus();
 
 window.addEventListener("load", async () => {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
     let result;
     try {
-        [{ result }] = await chrome.scripting.executeScript({
-            target: { tabId: tab.id },
+        [{result}] = await chrome.scripting.executeScript({
+            target: {tabId: tab.id},
             func: () => getSelection().toString(),
         });
-        textToConvert = result || '';
-        input.value = result || '';
-        output.innerHTML = convertToEnglish(result || '');
+
+        if (result) {
+            textToConvert = result;
+            input.value = result;
+            output.innerHTML = convertToEnglish(result);
+            copyBtn.textContent = "העתק";
+            copyBtn.disabled = false;
+            copyBtn.style.backgroundColor = 'green';
+        }
+
     } catch (e) {
-        return; // ignoring an unsupported page like chrome://extensions
+         // ignoring an unsupported page like chrome://extensions
     }
 });
 
@@ -104,6 +112,9 @@ toEnglishBtn.addEventListener('click', () => {
     toHebrew = false;
     output.innerHTML = convertToEnglish(textToConvert);
     copyBtn.textContent = "העתק";
+    copyBtn.style.backgroundColor = 'green';
+    replaceBtn.textContent = "החלף טקסט"
+    replaceBtn.style.backgroundColor = "#ffc107"
 });
 toHebrewBtn.addEventListener('click', () => {
     toEnglishBtn.classList.toggle('selected');
@@ -113,14 +124,22 @@ toHebrewBtn.addEventListener('click', () => {
     toHebrew = true;
     output.innerHTML = convertToHebrew(textToConvert);
     copyBtn.textContent = "העתק";
+    copyBtn.style.backgroundColor = 'green';
+    replaceBtn.textContent = "החלף טקסט"
+    replaceBtn.style.backgroundColor = "#ffc107"
+
 });
 
 input.addEventListener('input', e => {
     textToConvert = e.target.value || '';
+    output.innerHTML = toHebrew ? convertToHebrew(textToConvert) : convertToEnglish(textToConvert);
     copyBtn.textContent = "העתק";
     copyBtn.disabled = false;
     copyBtn.style.backgroundColor = 'green';
-    output.innerHTML = toHebrew ? convertToHebrew(textToConvert) : convertToEnglish(textToConvert);
+    replaceBtn.textContent = "החלף טקסט"
+    replaceBtn.style.backgroundColor = "#ffc107"
+
+
 
 });
 
@@ -130,5 +149,46 @@ copyBtn.addEventListener("click", () => {
     copyBtn.style.backgroundColor = 'darkgreen';
     copyBtn.style.color = "white";
     copyBtn.style.fontWeight = "bold";
-    copyBtn.style.transition = "color 0.3s, font-weight 0.3s";
 });
+
+
+replaceBtn.addEventListener("click", async () => {
+    const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+
+    chrome.scripting.executeScript({
+        target: {tabId: tab.id},
+        func: replaceTextOnPage,
+        args: [document.getElementById('output').innerText]
+    });
+});
+
+function replaceTextOnPage(newText) {
+    const activeElement = document.activeElement;
+
+    if (activeElement && (activeElement.tagName === "INPUT" || activeElement.tagName === "TEXTAREA")) {
+        // Replace text inside input fields and textareas
+        activeElement.value = newText;
+    } else {
+        // Replace text in any selected HTML element
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            let range = selection.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(document.createTextNode(newText));
+        }
+    }
+    // Notify the popup that the replacement is done
+    chrome.runtime.sendMessage({ action: "textReplaced" });
+}
+
+
+// Listen for the message from the content script
+chrome.runtime.onMessage.addListener((message) => {
+    if (message.action === "textReplaced") {
+        replaceBtn.textContent = "הוחלף!";
+        replaceBtn.style.backgroundColor = "darkgoldenrod";
+        replaceBtn.style.color = "white";
+        replaceBtn.style.fontWeight = "bold";
+    }
+});
+

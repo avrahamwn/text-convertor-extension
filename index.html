@@ -1,95 +1,35 @@
 <!DOCTYPE html>
 <html lang="he">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Text Convertor</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-family: 'Noto Sans Hebrew', sans-serif;
-            width: 320px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            margin: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .selected {
-            font-weight: bold;
-            background-color: #0056b3;
-        }
-
-        #input {
-            resize: none;
-            width: calc(100% - 10px);
-            height: 80px;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-        }
-
-        #output {
-            width: calc(100% - 10px);
-            min-height: 50px;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
-            background-color: white;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            font-weight: bold;
-            word-break: break-word;
-            text-align: right;
-        }
-
-        #copy-btn {
-            background-color: gray;
-            margin-top: 15px;
-        }
-
-        #copy-btn:hover {
-            background-color: darkred;
-        }
-
-        label, span {
-            font-size: 14px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-    </style>
-</head>
-<body dir="rtl">
-    <div>
-        <button class="selected" id="toEnglish">מעברית לאנגלית</button>
-        <button id="toHebrew">מאנגלית לעברית</button>
-    </div>
-    <label for="input">קלט:</label>
-    <textarea id="input" rows="4"></textarea>
-    <span>פלט:</span>
-    <div id="output"></div>
-    <button disabled id="copy-btn">העתק</button>
-    <script src="script.js"></script>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible"
+              content="ie=edge">
+        <title>Text Convertor</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;700&display=swap"
+              rel="stylesheet">
+        <link rel="stylesheet"
+              href="styles.css">
+    </head>
+    <body dir="rtl">
+        <div>
+            <button class="selected"
+                    id="toEnglish">מעברית לאנגלית
+            </button>
+            <button id="toHebrew">מאנגלית לעברית</button>
+        </div>
+        <label for="input">קלט:</label>
+        <textarea id="input"
+                  rows="4"></textarea>
+        <span>פלט:</span>
+        <div id="output"></div>
+        <div>
+            <button disabled
+                    id="copy-btn">העתק
+            </button>
+            <button id="replace-btn">החלף טקסט</button>
+        </div>
+        <script src="script.js"></script>
+    </body>
 </html>
