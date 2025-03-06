@@ -18,8 +18,5 @@
   "permissions": [
     "scripting",
     "activeTab"
-  ],
-  "host_permissions": [
-    "<all_urls>"
   ]
 }

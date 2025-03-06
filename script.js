@@ -153,10 +153,13 @@ copyBtn.addEventListener("click", () => {
 
 
 replaceBtn.addEventListener("click", async () => {
-    const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+    // Only execute script if a valid tab is found
+    if (!tab || !tab.id) return;
 
     chrome.scripting.executeScript({
-        target: {tabId: tab.id},
+        target: { tabId: tab.id },
         func: replaceTextOnPage,
         args: [document.getElementById('output').innerText]
     });
